@@ -1,26 +1,39 @@
 import java.util.List;
 
-import book.Book;
-import facade.LibratyFacade;
-import singleton.catalog.LibraryCatalog;
+import book.library.Book;
+import book.library.LibraryFacade;
 
 public class App {
     public static void main(String[] args) {
-        LibratyFacade libraryFacade = new LibratyFacade();
+        LibraryFacade libraryFacade = new LibraryFacade();
 
-        // Usando o padrão Singleton para acessar o catálogo da biblioteca
-        LibraryCatalog catalog = LibraryCatalog.getInstance();
+        // Verificar livros disponíveis
+        List<Book> availableBooks = libraryFacade.getAvailableBooks();
+        System.out.println("Livros disponíveis na biblioteca:");
+        for (Book book : availableBooks) {
+            System.out.println(book.getTitle() + " by " + book.getAuthor());
+        }
 
-        // Usando a classe Facade para adicionar livros ao catálogo
-        libraryFacade.addBookToCatalog("The Great Gatsby", "F. Scott Fitzgerald");
-        libraryFacade.addBookToCatalog("To Kill a Mockingbird", "Harper Lee");
-        libraryFacade.addBookToCatalog("1984", "George Orwell");
+        // Empréstimo de um livro
+        Book bookToLend = availableBooks.get(0);
+        libraryFacade.lendBook(bookToLend);
+        System.out.println("O livro '" + bookToLend.getTitle() + "' foi emprestado.");
 
-        // Usando a classe Facade para obter todos os livros no catálogo
-        List<Book> books = libraryFacade.getAllBooksInCatalog();
+        // Verificar livros disponíveis após empréstimo
+        availableBooks = libraryFacade.getAvailableBooks();
+        System.out.println("Livros disponíveis na biblioteca após o empréstimo:");
+        for (Book book : availableBooks) {
+            System.out.println(book.getTitle() + " by " + book.getAuthor());
+        }
 
-        System.out.println("Lista de Livros na Biblioteca:");
-        for (Book book : books) {
+        // Devolução de um livro
+        libraryFacade.returnBook(bookToLend);
+        System.out.println("O livro '" + bookToLend.getTitle() + "' foi devolvido.");
+
+        // Verificar livros disponíveis após devolução
+        availableBooks = libraryFacade.getAvailableBooks();
+        System.out.println("Livros disponíveis na biblioteca após a devolução:");
+        for (Book book : availableBooks) {
             System.out.println(book.getTitle() + " by " + book.getAuthor());
         }
     }
